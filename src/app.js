@@ -6,6 +6,7 @@ const config = require('./config');
 const requestId = require('./middleware/request-id');
 const errorHandler = require('./middleware/error-handler');
 const logger = require('./shared/logger');
+const authenticate = require('./middleware/auth');
 
 const petRoutes = require('./modules/pets/pet.routes');
 const natureRoutes = require('./modules/pets/nature.routes');
@@ -20,7 +21,7 @@ app.use(helmet());
 app.use(cors({
   origin: config.cors.origins,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-Request-Id'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-Timestamp', 'X-Nonce', 'X-Signature', 'X-Request-Id'],
   exposedHeaders: ['X-Request-Id'],
   maxAge: 86400,
 }));
@@ -53,6 +54,8 @@ app.get('/ready', (req, res) => {
 });
 
 app.use('/api/v1/auth', authRoutes);
+// 业务接口全部走 HMAC 签名校验
+app.use('/api/v1', authenticate);
 app.use('/api/v1/pets', petRoutes);
 app.use('/api/v1/natures', natureRoutes);
 app.use('/api/v1/skills', skillRoutes);
