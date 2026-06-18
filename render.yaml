@@ -1,0 +1,22 @@
+# ===== Render 一键部署 =====
+# 在 https://render.com 新建 Web Service → 选 "Deploy from YAML/YML"
+# 或者直接关联 GitHub 仓库自动部署
+
+services:
+  - type: web
+    name: game-tool-api
+    runtime: docker
+    plan: free              # 免费版（限流量但够朋友用）
+    region: singapore       # 新加坡节点，国内访问较快
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: CORS_ORIGINS
+        value: "*"          # 小程序体验版无origin，放开
+      - key: LOG_LEVEL
+        value: info
+    autoDeploy: true        # GitHub push 后自动部署
+    # 免费版限制：15分钟无访问会休眠，首次冷启动30秒

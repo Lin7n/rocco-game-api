@@ -1,0 +1,44 @@
+# Node / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 环境变量
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# 数据/缓存
+data/*.sqlite
+data/*.db
+*.sqlite
+*.db
+
+# 日志
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# 构建产物
+dist/
+build/
+coverage/
+.nyc_output/
+
+# 临时文件
+tmp/
+temp/
+.cache/
+
+# Docker 临时
+.docker-tmp/

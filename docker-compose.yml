@@ -1,0 +1,22 @@
+# Docker Compose - 一键启动（开发用）
+# 用法： docker compose up -d
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: game-tool-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - CORS_ORIGINS=*
+      - LOG_LEVEL=info
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
