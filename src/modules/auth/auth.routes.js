@@ -42,10 +42,13 @@ router.get('/sign', (req, res) => {
     });
   }
 
+  // 必须包含 /api/v1 前缀（与中间件 auth.js 里 req.originalUrl 一致）
+  const fullPath = path.startsWith('/api/v1/') ? path : `/api/v1${path.startsWith('/') ? '' : '/'}${path}`;
+
   // 复用后端中间件同样的签名算法（保证一致性）
   const timestamp = Date.now().toString();
   const nonce = crypto.randomBytes(8).toString('hex');
-  const payload = [apiKey, timestamp, nonce, method, path].join('\n');
+  const payload = [apiKey, timestamp, nonce, method, fullPath].join('\n');
   const signature = crypto.createHmac('sha256', apiKey).update(payload).digest('hex');
 
   sendSuccess(res, {
@@ -54,7 +57,7 @@ router.get('/sign', (req, res) => {
     nonce,
     signature,
     method,
-    path,
+    path: fullPath,
   });
 });
 
