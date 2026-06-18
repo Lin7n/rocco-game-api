@@ -1,7 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const config = require('../../config');
-const { success } = require('../../utils/response');
+const { sendSuccess } = require('../../utils/response');
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.get('/verify', (req, res) => {
     });
   }
 
-  success(res, { valid: true, message: '认证成功' });
+  sendSuccess(res, { valid: true, message: '认证成功' });
 });
 
 /**
@@ -48,7 +48,7 @@ router.get('/sign', (req, res) => {
   const payload = [apiKey, timestamp, nonce, method, path].join('\n');
   const signature = crypto.createHmac('sha256', apiKey).update(payload).digest('hex');
 
-  success(res, {
+  sendSuccess(res, {
     apiKey,
     timestamp,
     nonce,
@@ -60,7 +60,7 @@ router.get('/sign', (req, res) => {
 
 router.post('/generate-key', (req, res) => {
   const key = 'gk-' + crypto.randomBytes(16).toString('hex');
-  success(res, { apiKey: key, message: '请将此 Key 加入环境变量 API_KEYS' });
+  sendSuccess(res, { apiKey: key, message: '请将此 Key 加入环境变量 API_KEYS' });
 });
 
 module.exports = router;
